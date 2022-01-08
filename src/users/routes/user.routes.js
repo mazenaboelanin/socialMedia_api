@@ -1,4 +1,4 @@
-const { getAllUsersHandler, getUserHandler ,addUserHandler, updateUserHandler, deletUserHandler  } = require('../controllers/user.controller');
+const { getAllUsersHandler, getUserHandler ,addUserHandler, updateUserHandler, deletUserHandler  } = require('../controller/user.controller');
 const router = require('express').Router();
 
 const requestValidation = require('../../../common/middleware/requestValidation');
