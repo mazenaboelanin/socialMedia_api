@@ -23,7 +23,19 @@ exports.getAllUsersHandler = async(req, res, next)=>{
 // @ route      GET api/v1/users/:id
 // @ access     Public
 exports.getUserHandler = async(req, res, next)=>{
-    res.json({msg: 'hello get User'});
+    const {id} = req.params;
+
+    try {
+        const user = await User.findById(id);
+        if(user){
+            res.status(StatusCodes.OK).json({ success: true, data: user});
+        } else {
+            res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: `No user found with this id: ${id}` });
+        }
+        
+       } catch (err) {
+           res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, err});
+       }
 }
 
 
