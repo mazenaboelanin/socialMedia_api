@@ -18,3 +18,22 @@ exports.getAllPostsHandler = async(req, res, next)=>{
         res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, err});
     }
  }
+
+
+ 
+// @ desc       Add New Post
+// @ route      POST api/v1/posts
+// @ access     Public
+exports.addPostHandler = async(req, res, next)=>{
+    const {title, body, createdBy} = req.body;
+    try {
+
+        const newPost = new Post({title, body, createdBy});
+        const data = await newPost.save();
+        
+        res.status(StatusCodes.CREATED).json({ success: true, data, message: "Post Created Successfully"});
+        
+    } catch (err) {
+     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, data: {}, err});
+    }
+ }
