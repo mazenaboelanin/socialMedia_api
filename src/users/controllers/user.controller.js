@@ -9,7 +9,7 @@ exports.getAllUsersHandler = async(req, res, next)=>{
    try {
     const users = await User.find();
     if(users.length > 0){
-        res.status(StatusCodes.OK).json({ success: true, data: users});
+        res.status(StatusCodes.OK).json({ success: true,count: users.length, data: users});
     } else {
         res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: "no users found" });
     }
@@ -65,12 +65,41 @@ exports.addUserHandler = async(req, res, next)=>{
 // @ route      PUT api/v1/users/:id
 // @ access     Public
 exports.updateUserHandler = async(req, res, next)=>{
-    res.json({msg: 'hello update'});
+    const {id} = req.params;
+    const bodyToUpdate = req.body;
+
+    try {
+        const user = await User.findById(id);
+        if(user){
+            const updatedUser = await User.findByIdAndUpdate(id, bodyToUpdate, {
+                new: true,
+                runValidators: true
+            });
+            res.status(StatusCodes.OK).json({ success: true, data: updatedUser});
+        } else {
+            res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: `No user found with this id: ${id}`});
+        }
+        
+       } catch (err) {
+           res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, err});
+       }
 }
 
 // @ desc       Delete User
 // @ route      DELETE api/v1/users/:id
 // @ access     Public
 exports.deletUserHandler = async(req, res, next)=>{
-    res.json({msg: 'hello delete'});
+    const {id} = req.params;
+   
+    try {
+        const userDeleted = await User.findByIdAndDelete(id);
+        if(userDeleted){
+            res.status(StatusCodes.OK).json({ success: true, data: id , message: "User Deleted Successfully"});
+        } else {
+            res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: `No user found with this id: ${id}`});
+        }
+        
+       } catch (err) {
+           res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, err});
+       }
 }

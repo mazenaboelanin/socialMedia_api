@@ -17,7 +17,8 @@ const userSchema = new Schema({
     },
     phone: {
         type: Number,
-        minlength: [11, "Please add a phone number of 11 numbers only"]
+        minlength: [11, "Please add a phone number of 11 numbers only"],
+        maxlength: [11, "Please add a phone number of 11 numbers only"]
     },
     role:{
         type: String,
