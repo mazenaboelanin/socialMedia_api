@@ -9,7 +9,7 @@ exports.getAllPostsHandler = async(req, res, next)=>{
     try {
      const posts = await Post.find();
      if(posts.length > 0){
-         res.status(StatusCodes.OK).json({ success: true,count: users.length, data: posts});
+         res.status(StatusCodes.OK).json({ success: true,count: posts.length, data: posts});
      } else {
          res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: "no Posts found" });
      }
@@ -19,7 +19,25 @@ exports.getAllPostsHandler = async(req, res, next)=>{
     }
  }
 
+ 
+// @ desc       Get Specific Post
+// @ route      GET api/v1/posts/:id
+// @ access     Public
+exports.getPostHandler = async(req, res, next)=>{
+    const {id} = req.params;
 
+    try {
+        const post = await Post.findById(id);
+        if(post){
+            res.status(StatusCodes.OK).json({ success: true, data: post});
+        } else {
+            res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: `No post found with this id: ${id}` });
+        }
+        
+       } catch (err) {
+           res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, err});
+       }
+}
  
 // @ desc       Add New Post
 // @ route      POST api/v1/posts
@@ -32,8 +50,53 @@ exports.addPostHandler = async(req, res, next)=>{
         const data = await newPost.save();
         
         res.status(StatusCodes.CREATED).json({ success: true, data, message: "Post Created Successfully"});
-        
+
     } catch (err) {
      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, data: {}, err});
     }
  }
+
+
+ 
+// @ desc       Update Posts
+// @ route      PUT api/v1/posts/:id
+// @ access     Public
+exports.updatePostHandler = async(req, res, next)=>{
+    const {id} = req.params;
+    const bodyToUpdate = req.body;
+
+    try {
+        const post = await Post.findById(id);
+        if(post){
+            const updatedPost = await Post.findByIdAndUpdate(id, bodyToUpdate, {
+                new: true,
+                runValidators: true
+            });
+            res.status(StatusCodes.OK).json({ success: true, data: updatedPost});
+        } else {
+            res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: `No post found with this id: ${id}`});
+        }
+        
+       } catch (err) {
+           res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, err});
+       }
+}
+
+// @ desc       Delete Posts
+// @ route      DELETE api/v1/posts/:id
+// @ access     Public
+exports.deletePostHandler = async(req, res, next)=>{
+    const {id} = req.params;
+   
+    try {
+        const postDeleted = await Post.findByIdAndDelete(id);
+        if(postDeleted){
+            res.status(StatusCodes.OK).json({ success: true, data: id , message: "Post Deleted Successfully"});
+        } else {
+            res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: `No posts found with this id: ${id}`});
+        }
+        
+       } catch (err) {
+           res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, err});
+       }
+}
