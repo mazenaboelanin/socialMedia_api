@@ -1,0 +1,24 @@
+{
+  "name": "social_media_api",
+  "version": "1.0.0",
+  "description": "api that deals with user, posts and comments",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mazen Abo Elanin",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
+    "easy-rbac": "^3.2.0",
+    "express": "^4.17.2",
+    "http-status-codes": "^2.2.0",
+    "joi": "^17.5.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
