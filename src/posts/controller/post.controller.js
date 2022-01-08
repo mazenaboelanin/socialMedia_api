@@ -1,7 +1,6 @@
 const {StatusCodes} = require('http-status-codes');
 const Post = require('../model/post.model');
 
-
 // @ desc       Get All Posts
 // @ route      GET api/v1/posts
 // @ access     Public
