@@ -1,5 +1,6 @@
 const {StatusCodes} = require('http-status-codes');
 const Post = require('../model/post.model');
+const User = require('../../users/model/user.model');
 
 // @ desc       Get All Posts
 // @ route      GET api/v1/posts
@@ -44,11 +45,17 @@ exports.getPostHandler = async(req, res, next)=>{
 exports.addPostHandler = async(req, res, next)=>{
     const {title, body, createdBy} = req.body;
     try {
+        const user = await User.findById(createdBy);
+        if(user){
+            const newPost = new Post({title, body, createdBy});
+            const data = await newPost.save();
+            
+            await User.updateOne({_id: createdBy}, {postIds: [...user.postIds, newPost._id]});
+            res.status(StatusCodes.CREATED).json({ success: true, data, message: "Post Created Successfully"});
+        }else {
+            res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: `No user found with this id: ${createdBy}`});
+        }
 
-        const newPost = new Post({title, body, createdBy});
-        const data = await newPost.save();
-        
-        res.status(StatusCodes.CREATED).json({ success: true, data, message: "Post Created Successfully"});
 
     } catch (err) {
      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, data: {}, err});

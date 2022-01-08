@@ -1,4 +1,5 @@
 const {StatusCodes} = require('http-status-codes');
+const Post = require('../../posts/model/post.model');
 const Comment = require('../model/comment.model');
 
 // @ desc       Get All comments
@@ -45,11 +46,16 @@ exports.getCommentHandler = async(req, res, next)=>{
 exports.addCommentHandler = async(req, res, next)=>{
     const {description, commentOwner, postId} = req.body;
     try {
+        const post = await Post.findById(postId);
+        if(post){
+            const newComment = new Comment({description, commentOwner, postId});
+            const data = await newComment.save();
+            await Post.updateOne({_id: postId}, {commentIds: [...post.commentIds, newComment._id]});
+            res.status(StatusCodes.CREATED).json({ success: true, data, message: "Comment Created Successfully"});
+        } else {
+            res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: `No comment found with this id: ${id}`});
+        }
 
-        const newComment = new Comment({description, commentOwner, postId});
-        const data = await newComment.save();
-        
-        res.status(StatusCodes.CREATED).json({ success: true, data, message: "Comment Created Successfully"});
 
     } catch (err) {
      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, data: {}, err});

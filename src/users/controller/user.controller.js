@@ -8,7 +8,6 @@ const User = require('../model/user.model');
 exports.getAllUsersHandler = async(req, res, next)=>{
    try {
     const users = await User.find();
-    console.log('******', users);
     if(users.length > 0){
         res.status(StatusCodes.OK).json({ success: true,count: users.length, data: users});
     } else {

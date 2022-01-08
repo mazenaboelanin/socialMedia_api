@@ -11,7 +11,8 @@ const postSchema = new Schema({
     },
     createdBy:{
         type: Schema.Types.ObjectId, ref: "user"
-    }
+    },
+    commentIds: [{type: Schema.Types.ObjectId, ref: "comment"}]
 },{
     timestamps: true
 });

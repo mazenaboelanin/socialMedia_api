@@ -22,7 +22,8 @@ const userSchema = new Schema({
     role:{
         type: String,
         enum: ["user" ,"admin", "superadmin"],
-    }
+    },
+    postIds: [{ type: Schema.Types.ObjectId, ref: "post"}]
 },{
     timestamps:true
 });
