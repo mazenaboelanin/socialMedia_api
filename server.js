@@ -5,6 +5,7 @@ const dotenv = require('dotenv').config({path: './config/config.env'});
 
 // Routes 
 const userRoutes = require('./src/users/routes/user.routes');
+const postRoutes = require('./src/posts/routes/post.routes');
 
 // PORT
 const port = process.env.PORT || 5000;
@@ -17,6 +18,7 @@ dbConnection();
 
 // load routes
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/posts', postRoutes);
 
 //app.get('/', (req, res) => res.send('Hello World!'))
 app.listen(port, () => console.log(`Server is running and listening on port ${port}!`))
