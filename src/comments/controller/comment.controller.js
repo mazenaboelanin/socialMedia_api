@@ -27,7 +27,7 @@ exports.getCommentHandler = async(req, res, next)=>{
     const {id} = req.params;
 
     try {
-        const comment = await comment.findById(id);
+        const comment = await Comment.findById(id);
         if(comment){
             res.status(StatusCodes.OK).json({ success: true, data: comment});
         } else {
@@ -68,7 +68,7 @@ exports.updateCommentHandler = async(req, res, next)=>{
     try {
         const comment = await Comment.findById(id);
         if(comment){
-            const updatedComment = await Post.findByIdAndUpdate(id, bodyToUpdate, {
+            const updatedComment = await Comment.findByIdAndUpdate(id, bodyToUpdate, {
                 new: true,
                 runValidators: true
             });
