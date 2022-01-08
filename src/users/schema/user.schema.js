@@ -1,5 +1,5 @@
 const {Schema} = require('mongoose');
-
+const bcrypt = require('bcrypt');
 
 const userSchema = new Schema({
     name: {
@@ -8,7 +8,8 @@ const userSchema = new Schema({
     },
     email:{
         type:String,
-        required: [true, "Please add an email"]
+        required: [true, "Please add an email"],
+        unique: [true, "email already taken"]
     },
     password: {
         type: String, 
@@ -27,5 +28,15 @@ const userSchema = new Schema({
 });
 
 
+
+// pre middleware to hash password before saving to DB
+userSchema.pre('save', async function(next){
+    try {
+        this.password = await bcrypt.hash(this.password, 10);
+        next();
+    } catch (err) {
+        throw err;
+    }
+})
 
 module.exports = userSchema;
