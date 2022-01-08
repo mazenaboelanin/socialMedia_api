@@ -1,5 +1,4 @@
 const {Schema} = require('mongoose');
-Description,commentowner,postid
 
 const commentSchema = new Schema({
     description:{

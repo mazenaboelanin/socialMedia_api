@@ -1,14 +1,14 @@
-const { } = require('../controller/comment.controller');
+const {getAllCommentsHandler,getCommentHandler, addCommentHandler, updateCommentHandler, deleteCommentHandler } = require('../controller/comment.controller');
 const router = require('express').Router();
 
 
 router.route('/')
-.get()
-.post( );
+.get(getAllCommentsHandler)
+.post( addCommentHandler);
 
 router.route('/:id')
-.get()
-.put()
-.delete();
+.get(getCommentHandler)
+.put(updateCommentHandler)
+.delete(deleteCommentHandler);
 
 module.exports = router ;
