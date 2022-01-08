@@ -22,7 +22,7 @@ const userSchema = new Schema({
     },
     role:{
         type: String,
-        enum: ["user" ,"admin", "superadmin"]
+        enum: ["user" ,"admin", "superadmin"],
     }
 },{
     timestamps:true
@@ -34,6 +34,20 @@ const userSchema = new Schema({
 userSchema.pre('save', async function(next){
     try {
         this.password = await bcrypt.hash(this.password, 10);
+        next();
+    } catch (err) {
+        throw err;
+    }
+})
+
+// pre middleware to add default role 
+userSchema.pre('save', async function(next){
+    try {
+       if(!this.role){
+           this.role = "user"
+       } else {
+           this.role = this.role
+       }
         next();
     } catch (err) {
         throw err;
