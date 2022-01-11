@@ -13,8 +13,11 @@ exports.register = async(req, res, next)=>{
        else {
            const newUser = new User({name, email, password, phone, role});
            const data = await newUser.save();
+
+           // Create Token 
+           const token = newUser.getSignedJwtToken();
           
-           res.status(StatusCodes.CREATED).json({ success: true, data});
+           res.status(StatusCodes.CREATED).json({ success: true, data, token});
        }
    } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, data: {}, err});
