@@ -48,14 +48,13 @@ exports.logIn = async(req, res, next)=>{
          res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: "Invalid Email"});
         } else { 
             const isMatch = await user.matchPassword(password);
-
             if(!isMatch){
                 res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: "Invalid password"});
             } else {
                 // Create Token 
-                const token = newUser.getSignedJwtToken();
+                const token = user.getSignedJwtToken();
            
-                res.status(StatusCodes.CREATED).json({ success: true, data, token});
+                res.status(StatusCodes.OK).json({ success: true,user: user._id, token });
             }
  
 
