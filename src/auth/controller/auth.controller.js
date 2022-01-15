@@ -1,6 +1,7 @@
 const {StatusCodes} = require('http-status-codes');
 const sendMail = require('../../../common/services/sendEmail');
 const User = require('../../users/model/user.model');
+const jwt = require('jsonwebtoken');
 
 
 // @ desc       Register
@@ -16,12 +17,13 @@ exports.register = async(req, res, next)=>{
         res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: "Email already Exists"});
        }
        else {
-           sendMail(process.env.MAIL_SENDER, process.env.MAIL_SENDER_PASSWORD, [email], 'Email VERIFICATION', '<a href="http://localhost:5000/verify"></a>');
-           const newUser = new User({name, email, password, phone, role});
-           const data = await newUser.save();
+        const newUser = new User({name, email, password, phone, role});
+        const data = await newUser.save();
 
-           // Create Token 
-           const token = newUser.getSignedJwtToken();
+        // Create Token 
+        const token = newUser.getSignedJwtToken();
+           sendMail(process.env.MAIL_SENDER, process.env.MAIL_SENDER_PASSWORD, [email], 'Email VERIFICATION', `<a href="http://localhost:5000/api/v1/auth/verify/${token}"> Verify Email</a>`);
+
           
            res.status(StatusCodes.CREATED).json({ success: true, data, token});
        }
@@ -64,4 +66,31 @@ exports.logIn = async(req, res, next)=>{
     } catch (err) {
      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, data: {}, err});
     }
+}
+
+
+
+// @ desc       verify email
+// @ route      GET api/v1/auth/verify/:token
+// @ access     Public
+
+exports.verify = async (req, res)=>{
+    const {token} = req.params;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(decoded);
+    const user = await User.findOne({_id: decoded.id});
+    console.log(user);
+
+    if (user){
+        const updatedUser = await User.updateOne({_id: decoded.id}, {
+            verified : true
+        });
+        res.status(StatusCodes.OK).json({message: "Email Verified"});
+    }else {
+        
+        res.status(StatusCodes.FORBIDDEN).json({message: "FORBIDDEN"});
+    }
+
+
+
 }

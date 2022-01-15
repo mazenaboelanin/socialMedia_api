@@ -66,6 +66,11 @@ userSchema.methods.getSignedJwtToken = function(){
         );
 }
 
+// Decode JWT Token
+// userSchema.methods.decodeJwtToken = function(enteredToken){
+//     return jwt.verify(enteredToken, process.env.JWT_SECRET);
+// }
+
 // match user password to hashed password
 userSchema.methods.matchPassword = async function(enteredPassword){
     return await bcrypt.compare(enteredPassword, this.password);
