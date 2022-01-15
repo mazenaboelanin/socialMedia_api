@@ -1,4 +1,5 @@
 const {StatusCodes} = require('http-status-codes');
+const sendMail = require('../../../common/services/sendEmail');
 const User = require('../../users/model/user.model');
 
 
@@ -15,6 +16,7 @@ exports.register = async(req, res, next)=>{
         res.status(StatusCodes.BAD_REQUEST).json({ success: false, data: {}, message: "Email already Exists"});
        }
        else {
+           sendMail(process.env.MAIL_SENDER, process.env.MAIL_SENDER_PASSWORD, [email], 'Email VERIFICATION', '<a href="http://localhost:5000/verify"></a>');
            const newUser = new User({name, email, password, phone, role});
            const data = await newUser.save();
 

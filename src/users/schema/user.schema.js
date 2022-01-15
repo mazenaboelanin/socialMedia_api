@@ -17,6 +17,7 @@ const userSchema = new Schema({
         type: String, 
         required: [true, "Please add a Password"]
     },
+    verified: {type: Boolean, default: false},
     phone: {
         type: Number,
         min: [11, "Please add a phone number of 11 numbers only"]
