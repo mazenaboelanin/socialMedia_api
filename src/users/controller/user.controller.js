@@ -1,13 +1,16 @@
 const req = require('express/lib/request');
 const {StatusCodes} = require('http-status-codes');
+const paginationService = require('../../../common/services/paginationService');
 const User = require('../model/user.model');
 
 // @ desc       Get All Users
 // @ route      GET api/v1/users
 // @ access     Public
 exports.getAllUsersHandler = async(req, res, next)=>{
+    let {page,size} = req.query;
+    const {skip, limit} = paginationService(page,size);
    try {
-    const users = await User.find();
+    const users = await User.find().skip(skip).limit(limit);
     if(users.length > 0){
         res.status(StatusCodes.OK).json({ success: true,count: users.length, data: users});
     } else {
